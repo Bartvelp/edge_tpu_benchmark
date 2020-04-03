@@ -1,7 +1,8 @@
 import tensorflow as tf
 import numpy as np
 # https://www.tensorflow.org/lite/performance/post_training_quantization
-
+# if you get a toco_from_protos: not found error
+# Add ~/.local/bin/ to your PATH. e.g: PATH=/home/bart/.local/bin/:$PATH
 def prepare_images():
 	mnist = tf.keras.datasets.mnist
 	(training_images, training_labels), (testing_images, testing_labels) = mnist.load_data()
@@ -34,4 +35,8 @@ if __name__ == '__main__':
 	converter.representative_dataset = representative_dataset_gen
 	tflite_quant_model = converter.convert()
 
-	open("converted_model_from_keras_8bit_all.tflite", "wb").write(tflite_quant_model)
+	filename = 'converted_model_from_keras_8bit_all.tflite'
+	open(filename, 'wb').write(tflite_quant_model)
+	print('Saved model with 8bit quanitization')
+	print('Run the following command to compile it for the edge tpu:')
+	print('edgetpu_compiler {}'.format(filename))

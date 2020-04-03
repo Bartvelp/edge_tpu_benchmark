@@ -1,4 +1,5 @@
 import tensorflow as tf
+import pickle
 
 def get_images():
   mnist = tf.keras.datasets.mnist
@@ -22,7 +23,7 @@ def create_model():
   )
   return model
 
-if __name__ == __main__:
+if __name__ == '__main__':
   training_images, testing_images, training_labels, testing_labels = get_images()
   model = create_model()
   # Train for 5 runs trough the data, batch size is auto
@@ -35,3 +36,6 @@ if __name__ == __main__:
   print('{} is the testing accuracy'.format(test_acc))
   # Save model in h5 format to disk
   model.save("model.h5")
+  # also save the MNIST data to disk for inference testing
+  pickle.dump(tf.keras.datasets.mnist.load_data(), open('mnist_data.pickle', 'wb'))
+  print('Saved model and MNIST data')
