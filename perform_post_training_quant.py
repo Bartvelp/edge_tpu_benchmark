@@ -23,10 +23,8 @@ def representative_dataset_gen():
     yield [images[i:i+1]]
 
 if __name__ == '__main__':
-	# load model
-	model = tf.keras.models.load_model('model.h5')
-
-	converter = tf.lite.TFLiteConverter.from_keras_model(model)
+	# load model, compat mode because https://github.com/google-coral/edgetpu/issues/13
+	converter = tf.compat.v1.lite.TFLiteConverter.from_keras_model_file('model.h5')
 	converter.optimizations = [tf.lite.Optimize.DEFAULT]
 	converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
 	converter.inference_input_type = tf.uint8

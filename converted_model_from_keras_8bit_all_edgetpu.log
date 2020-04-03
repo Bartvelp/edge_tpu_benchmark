@@ -6,5 +6,4 @@ Operator                       Count      Status
 
 SOFTMAX                        1          Mapped to Edge TPU
 FULLY_CONNECTED                2          Mapped to Edge TPU
-QUANTIZE                       1          Operation is otherwise supported, but not mapped due to some unspecified limitation
-DEQUANTIZE                     1          Operation is working on an unsupported data type
+QUANTIZE                       2          Mapped to Edge TPU
