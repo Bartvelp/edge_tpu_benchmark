@@ -19,7 +19,6 @@ def prepare_images():
 
 def run_inference_round(interpreter, images):
 	before = current_milli_time()
-
 	for image in images:
 		# print_greyscale(image)
 		input_data = np.array([image]) # Needs to be wrapped for proper dimensions
@@ -29,7 +28,7 @@ def run_inference_round(interpreter, images):
 		# print('# {}, conf: {}'.format(np.argmax(output_data), np.max(output_data)))
 
 	after = current_milli_time()
-	return (before - after)
+	return (after - before)
 
 def print_greyscale(pixels, width=28, height=28):
 	# helper print function adopted from https://stackoverflow.com/a/44052237/5329317
@@ -43,7 +42,7 @@ def print_greyscale(pixels, width=28, height=28):
 
 if __name__ == "__main__":
 	# Load TFLite model and allocate tensors.
-	interpreter = tf.lite.Interpreter(model_path="converted_model.tflite")
+	interpreter = tf.lite.Interpreter(model_path="converted_model_from_keras_8bit_all.tflite")
 	interpreter.allocate_tensors()
 
 	# Get input and output tensors shapes etc.

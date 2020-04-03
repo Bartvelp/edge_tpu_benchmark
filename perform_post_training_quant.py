@@ -1,4 +1,5 @@
 import tensorflow as tf
+import numpy as np
 # https://www.tensorflow.org/lite/performance/post_training_quantization
 
 def prepare_images():
@@ -12,7 +13,25 @@ def prepare_images():
 	used_images = np.concatenate([training_images, testing_images])
 	return used_images
 
-converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_dir)
+
+images = prepare_images()
+
+def representative_dataset_gen():
+  for i in range(1, 10000):
+    # Get sample input data as a numpy array in a method of your choosing.
+    yield [images[i:i+1]]
+
+
+# load model
+model = tf.keras.models.load_model('model.h5')
+
+converter = tf.lite.TFLiteConverter.from_keras_model(model)
 converter.optimizations = [tf.lite.Optimize.DEFAULT]
-converter.representative_dataset = prepare_images()
+converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
+converter.inference_input_type = tf.uint8
+converter.inference_output_type = tf.uint8
+
+converter.representative_dataset = representative_dataset_gen
 tflite_quant_model = converter.convert()
+
+open("converted_model_from_keras_8bit_all.tflite", "wb").write(tflite_quant_model)

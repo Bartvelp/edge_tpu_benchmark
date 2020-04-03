@@ -29,12 +29,4 @@ model.summary()
 test_loss, test_acc = model.evaluate(testing_images, testing_labels, verbose=2)
 print('{} is the testing accuracy'.format(test_acc))
 
-# Convert model to tflite
-converter = tf.lite.TFLiteConverter.from_keras_model(model)
-converter.optimizations = [tf.lite.Optimize.DEFAULT]
-converter.representative_dataset = representative_dataset_gen
-
-tflite_model = converter.convert()
-# Save tflite model to disk
-
-open("converted_model_8bit.tflite", "wb").write(tflite_model)
+model.save("model.h5")
