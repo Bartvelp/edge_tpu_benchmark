@@ -1,13 +1,13 @@
 import numpy as np
 import tensorflow as tf
+import pickle
 import time
 
 def current_milli_time(): # Helper time function
 	return int(round(time.time() * 1000))
 
 def prepare_images():
-	mnist = tf.keras.datasets.mnist
-	(training_images, training_labels), (testing_images, testing_labels) = mnist.load_data()
+	(training_images, training_labels), (testing_images, testing_labels) = pickle.load(open('mnist_data.pickle', 'rb'))
 	# Convert the 8-bit numbers into floats between 0 and 1 as input 
 	training_images, testing_images = training_images / 255.0, testing_images / 255.0
 
