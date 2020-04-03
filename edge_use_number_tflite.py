@@ -9,11 +9,6 @@ def current_milli_time(): # Helper time function
 
 def prepare_images():
 	(training_images, training_labels), (testing_images, testing_labels) = pickle.load(open('mnist_data.pickle', 'rb'))
-	# Convert the 8-bit numbers into floats between 0 and 1 as input 
-	training_images, testing_images = training_images / 255.0, testing_images / 255.0
-
-	# convert it to a 32 bit float for tflite
-	training_images, testing_images = training_images.astype(np.float32) , testing_images.astype(np.float32) 
 	used_images = np.concatenate([training_images, testing_images])
 	return used_images[0:5000]
 
@@ -37,27 +32,31 @@ def run_inference_round(interpreter, images):
 
 def get_interpreter (isEdgeTPU):
 	if isEdgeTPU:
-		print('Using EdgeTPU')
 		interpreter = tflite.Interpreter(
 			model_path="converted_model_from_keras_8bit_all_edgetpu.tflite", 
 			experimental_delegates=[tflite.load_delegate('libedgetpu.so.1')]
 		)
 		return interpreter
 	else:
-		print('NOT using EdgeTPU')
 		return tflite.Interpreter(model_path="converted_model_from_keras_8bit_all.tflite")
 
 if __name__ == "__main__":
-	# Load TFLite model and allocate tensors.
-	interpreter = get_interpreter(argv[1] == 'use-edge-tpu') if (len(argv) > 1) else get_interpreter(False)
-
-	interpreter.allocate_tensors()
-	images = prepare_images()
-
-	print('Starting inference rounds')
 	# Currently takes
-	# 2106 ms om the Edge TPU
-	# 717 ms on the CPU ...
-	for i in range(10):
-		time_needed = run_inference_round(interpreter, images)
+	# 1876 ms om the Edge TPU
+	# 700 ms on the CPU ...
+
+	images = prepare_images()
+	# Load TFLite model and allocate tensors.
+	CPU_interpreter = get_interpreter(False)
+	TPU_interpreter = get_interpreter(True)
+	CPU_interpreter.allocate_tensors()
+	TPU_interpreter.allocate_tensors()
+	print('Starting inference rounds on CPU')
+	for i in range(5):
+		time_needed = run_inference_round(CPU_interpreter, images)
+		print('{}: {} images took {} ms'.format(i, len(images), time_needed))
+	
+	print('Starting inference rounds on TPU')
+	for i in range(5):
+		time_needed = run_inference_round(TPU_interpreter, images)
 		print('{}: {} images took {} ms'.format(i, len(images), time_needed))
