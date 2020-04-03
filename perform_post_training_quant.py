@@ -21,17 +21,17 @@ def representative_dataset_gen():
     # Get sample input data as a numpy array in a method of your choosing.
     yield [images[i:i+1]]
 
+if __name__ == '__main__':
+	# load model
+	model = tf.keras.models.load_model('model.h5')
 
-# load model
-model = tf.keras.models.load_model('model.h5')
+	converter = tf.lite.TFLiteConverter.from_keras_model(model)
+	converter.optimizations = [tf.lite.Optimize.DEFAULT]
+	converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
+	converter.inference_input_type = tf.uint8
+	converter.inference_output_type = tf.uint8
 
-converter = tf.lite.TFLiteConverter.from_keras_model(model)
-converter.optimizations = [tf.lite.Optimize.DEFAULT]
-converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
-converter.inference_input_type = tf.uint8
-converter.inference_output_type = tf.uint8
+	converter.representative_dataset = representative_dataset_gen
+	tflite_quant_model = converter.convert()
 
-converter.representative_dataset = representative_dataset_gen
-tflite_quant_model = converter.convert()
-
-open("converted_model_from_keras_8bit_all.tflite", "wb").write(tflite_quant_model)
+	open("converted_model_from_keras_8bit_all.tflite", "wb").write(tflite_quant_model)
