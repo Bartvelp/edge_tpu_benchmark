@@ -8,6 +8,9 @@ def prepare_images():
 	(training_images, training_labels), (testing_images, testing_labels) = mnist.load_data()
 	# Convert the 8-bit numbers into floats between 0 and 1 as input 
 	training_images, testing_images = training_images / 255.0, testing_images / 255.0
+	# Flatten images here
+	training_images = training_images.reshape(training_images.shape[0], 28 * 28)
+	testing_images = testing_images.reshape(testing_images.shape[0], 28 * 28)
 
 	# convert it to a 32 bit float for tflite
 	training_images, testing_images = training_images.astype(np.float32) , testing_images.astype(np.float32) 
@@ -18,9 +21,9 @@ def prepare_images():
 images = prepare_images()
 
 def representative_dataset_gen():
-  for i in range(1, 10000):
-    # Get sample input data as a numpy array in a method of your choosing.
-    yield [images[i:i+1]]
+	for i in range(1, 10000):
+		# Get sample input data as a numpy array in a method of your choosing.
+		yield [images[i:i+1]]
 
 if __name__ == '__main__':
 	# load model, compat mode because https://github.com/google-coral/edgetpu/issues/13

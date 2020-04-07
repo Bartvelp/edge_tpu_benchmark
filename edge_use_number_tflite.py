@@ -9,7 +9,12 @@ def current_milli_time(): # Helper time function
 
 def prepare_images():
 	(training_images, training_labels), (testing_images, testing_labels) = pickle.load(open('mnist_data.pickle', 'rb'))
+	# Flatten images here
+	training_images = training_images.reshape(training_images.shape[0], 28 * 28)
+	testing_images = testing_images.reshape(testing_images.shape[0], 28 * 28)
+
 	used_images = np.concatenate([training_images, testing_images])
+
 	return used_images[0:5000]
 
 
@@ -20,7 +25,7 @@ def run_inference_round(interpreter, images):
 
 	for image in images:
 		# print_greyscale(image)
-		input_data = np.array([image])  # Needs to be wrapped for proper dimensions
+		input_data = np.array([image])	# Needs to be wrapped for proper dimensions
 		interpreter.set_tensor(input_details[0]['index'], input_data)
 		start = time.perf_counter()
 		interpreter.invoke()

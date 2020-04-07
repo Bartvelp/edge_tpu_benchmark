@@ -5,8 +5,14 @@ import time
 
 def prepare_images():
 	(training_images, training_labels), (testing_images, testing_labels) = pickle.load(open('mnist_data.pickle', 'rb'))
+	# Flatten images here
+	training_images = training_images.reshape(training_images.shape[0], 28 * 28)
+	testing_images = testing_images.reshape(testing_images.shape[0], 28 * 28)
+
 	used_images = np.concatenate([training_images, testing_images])
+
 	return used_images[0:5000]
+
 
 def run_inference_round(interpreter, images):
 	inference_times = []
