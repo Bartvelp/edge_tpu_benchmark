@@ -4,9 +4,6 @@ import pickle
 import time
 from sys import argv
 
-def current_milli_time(): # Helper time function
-	return int(round(time.time() * 1000))
-
 def prepare_images():
 	(training_images, training_labels), (testing_images, testing_labels) = pickle.load(open('mnist_data.pickle', 'rb'))
 	# Flatten images here
@@ -33,7 +30,7 @@ def run_inference_round(interpreter, images):
 		inference_times.append(inference_time)
 		output_data = interpreter.get_tensor(output_details[0]['index'])
 		# print('# {}, conf: {}'.format(np.argmax(output_data), np.max(output_data)))
-	return sum(inference_times)
+	return sum(inference_times) * 1000
 
 def get_interpreter (isEdgeTPU):
 	if isEdgeTPU:
