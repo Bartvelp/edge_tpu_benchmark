@@ -1,4 +1,5 @@
 import tensorflow as tf
+
 import pickle
 
 def get_images():
@@ -11,14 +12,13 @@ def get_images():
 def create_model():
   model = tf.keras.models.Sequential([ # Sequential model, easy mindmap
       tf.keras.layers.Flatten(input_shape=(28, 28)), # we need to flatten the matrix into a vector 
-      tf.keras.layers.Dense(128, activation='relu'), # Rectified linear activator
-      tf.keras.layers.Dense(10), # 10 digits, so one_hot output
+      tf.keras.layers.Dense(10, activation='relu'), # Rectified linear activator
       tf.keras.layers.Softmax() # Softmax the previous output scores for the loss function
   ])
   model.compile(
-    optimizer='adam', # stochastic gradient descent method that just works well
+    optimizer='sgd', # stochastic gradient descent method that just works well
     # easiest to use loss function sparse_categorical_crossentropy, easiest to understand mean_squared_error
-    loss='sparse_categorical_crossentropy',
+    loss='mean_squared_error',
     metrics=['accuracy'] # Log accuracy
   )
   return model
@@ -26,13 +26,16 @@ def create_model():
 if __name__ == '__main__':
   training_images, testing_images, training_labels, testing_labels = get_images()
   model = create_model()
+  one_hot_training_labels = tf.keras.utils.to_categorical(training_labels)
+  one_hot_testing_labels = tf.keras.utils.to_categorical(testing_labels)
   # Train for 5 runs trough the data, batch size is auto
-  model.fit(training_images, training_labels, epochs=5)
+  model.fit(training_images, one_hot_training_labels, epochs=1)
   # Now the model is 98% accurate to the training data
   model.summary()
-
+  #tf.keras.utils.plot_model(model, to_file='model.png')
+  
   # try it on the testing data
-  test_loss, test_acc = model.evaluate(testing_images, testing_labels, verbose=2)
+  test_loss, test_acc = model.evaluate(testing_images, one_hot_testing_labels, verbose=2)
   print('{} is the testing accuracy'.format(test_acc))
   # Save model in h5 format to disk
   model.save("model.h5")

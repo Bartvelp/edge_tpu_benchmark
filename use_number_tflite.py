@@ -8,14 +8,8 @@ def current_milli_time(): # Helper time function
 
 def prepare_images():
 	(training_images, training_labels), (testing_images, testing_labels) = pickle.load(open('mnist_data.pickle', 'rb'))
-	# Convert the 8-bit numbers into floats between 0 and 1 as input 
-	training_images, testing_images = training_images / 255.0, testing_images / 255.0
-
-	# convert it to a 32 bit float for tflite
-	training_images, testing_images = training_images.astype(np.float32) , testing_images.astype(np.float32) 
 	used_images = np.concatenate([training_images, testing_images])
-	return used_images
-
+	return used_images[0:5000]
 
 def run_inference_round(interpreter, images):
 	before = current_milli_time()
@@ -49,6 +43,6 @@ if __name__ == "__main__":
 	input_details = interpreter.get_input_details()
 	output_details = interpreter.get_output_details()
 	images = prepare_images()
-	for i in range(10):
+	for i in range(5):
 		time_needed = run_inference_round(interpreter, images)
 		print('{}: {} images took {} ms'.format(i, len(images), time_needed))
