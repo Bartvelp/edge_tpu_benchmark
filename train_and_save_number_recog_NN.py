@@ -12,8 +12,9 @@ def get_images():
 def create_model():
   model = tf.keras.models.Sequential([ # Sequential model, easy mindmap
       tf.keras.layers.Flatten(input_shape=(28, 28)), # we need to flatten the matrix into a vector 
-      tf.keras.layers.Dense(10, activation='relu'), # Rectified linear activator
-      tf.keras.layers.Softmax() # Softmax the previous output scores for the loss function
+      tf.keras.layers.Dense(50, activation='relu'), # Rectified linear activator
+      tf.keras.layers.Dense(10, activation='relu'),
+      tf.keras.layers.Softmax()  # Softmax the previous output scores for the loss function
   ])
   model.compile(
     optimizer='sgd', # stochastic gradient descent method that just works well

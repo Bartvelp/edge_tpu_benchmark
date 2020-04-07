@@ -3,26 +3,24 @@ import tensorflow as tf
 import pickle
 import time
 
-def current_milli_time(): # Helper time function
-	return int(round(time.time() * 1000))
-
 def prepare_images():
 	(training_images, training_labels), (testing_images, testing_labels) = pickle.load(open('mnist_data.pickle', 'rb'))
 	used_images = np.concatenate([training_images, testing_images])
 	return used_images[0:5000]
 
 def run_inference_round(interpreter, images):
-	before = current_milli_time()
+	inference_times = []
 	for image in images:
 		# print_greyscale(image)
 		input_data = np.array([image]) # Needs to be wrapped for proper dimensions
 		interpreter.set_tensor(input_details[0]['index'], input_data)
+		start = time.perf_counter()
 		interpreter.invoke()
+		inference_time = time.perf_counter() - start
+		inference_times.append(inference_time)
 		output_data = interpreter.get_tensor(output_details[0]['index'])
 		# print('# {}, conf: {}'.format(np.argmax(output_data), np.max(output_data)))
-
-	after = current_milli_time()
-	return (after - before)
+	return sum(inference_times) * 1000
 
 def print_greyscale(pixels, width=28, height=28):
 	# helper print function adopted from https://stackoverflow.com/a/44052237/5329317

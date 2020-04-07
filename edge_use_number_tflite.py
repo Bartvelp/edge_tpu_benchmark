@@ -14,21 +14,18 @@ def prepare_images():
 
 
 def run_inference_round(interpreter, images):
-# Get input and output tensors shapes etc.
-	input_details = interpreter.get_input_details()
-	output_details = interpreter.get_output_details()
-
-	before = current_milli_time()
+	inference_times = []
 	for image in images:
 		# print_greyscale(image)
-		input_data = np.array([image]) # Needs to be wrapped for proper dimensions
+		input_data = np.array([image])  # Needs to be wrapped for proper dimensions
 		interpreter.set_tensor(input_details[0]['index'], input_data)
+		start = time.perf_counter()
 		interpreter.invoke()
+		inference_time = time.perf_counter() - start
+		inference_times.append(inference_time)
 		output_data = interpreter.get_tensor(output_details[0]['index'])
 		# print('# {}, conf: {}'.format(np.argmax(output_data), np.max(output_data)))
-
-	after = current_milli_time()
-	return (after - before)
+	return sum(inference_times) * 1000
 
 def get_interpreter (isEdgeTPU):
 	if isEdgeTPU:
