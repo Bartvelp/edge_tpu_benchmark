@@ -10,6 +10,9 @@ def prepare_images():
 
 def run_inference_round(interpreter, images):
 	inference_times = []
+	input_details = interpreter.get_input_details()
+	output_details = interpreter.get_output_details()
+
 	for image in images:
 		# print_greyscale(image)
 		input_data = np.array([image]) # Needs to be wrapped for proper dimensions
@@ -37,9 +40,6 @@ if __name__ == "__main__":
 	interpreter = tf.lite.Interpreter(model_path="converted_model_from_keras_8bit_all.tflite")
 	interpreter.allocate_tensors()
 
-	# Get input and output tensors shapes etc.
-	input_details = interpreter.get_input_details()
-	output_details = interpreter.get_output_details()
 	images = prepare_images()
 	for i in range(5):
 		time_needed = run_inference_round(interpreter, images)
