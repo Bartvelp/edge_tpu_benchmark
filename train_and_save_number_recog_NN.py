@@ -17,12 +17,12 @@ def get_images():
 
 def create_model():
 	model = tf.keras.models.Sequential([ # Sequential model, easy mindmap
-			tf.keras.layers.Dense(784, activation='relu', input_shape=(784,)), # Rectified linear activator
-			tf.keras.layers.Dense(10, activation='relu'),
+			tf.keras.layers.Dense(450, input_shape=(784,)), # Rectified linear activator
+			tf.keras.layers.Dense(10, activation='relu'), # 10 digits, so one_hot output
 			tf.keras.layers.Softmax()	# Softmax the previous output scores for the loss function
 	])
 	model.compile(
-		optimizer='adam', # stochastic gradient descent method that just works well
+		optimizer='sgd', # stochastic gradient descent method that just works well
 		# easiest to use loss function sparse_categorical_crossentropy, easiest to understand mean_squared_error
 		loss='mean_squared_error',
 		metrics=['accuracy'] # Log accuracy

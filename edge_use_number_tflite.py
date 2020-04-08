@@ -12,7 +12,7 @@ def prepare_images():
 
 	used_images = np.concatenate([training_images, testing_images])
 
-	return used_images[0:5000]
+	return used_images[0:500]
 
 
 def run_inference_round(interpreter, images):
