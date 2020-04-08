@@ -13,11 +13,11 @@ def get_images():
 	# Flatten images here
 	training_images = training_images.reshape(training_images.shape[0], 28 * 28)
 	testing_images = testing_images.reshape(testing_images.shape[0], 28 * 28)
-	return training_images[:10000], testing_images[:1000], training_labels[:10000], testing_labels[:1000]
+	return training_images[:1000], testing_images[:1000], training_labels[:1000], testing_labels[:1000]
 
 def create_model():
 	model = tf.keras.models.Sequential([ # Sequential model, easy mindmap
-			tf.keras.layers.Dense(200, input_shape=(784,)), # Rectified linear activator
+			tf.keras.layers.Dense(20, input_shape=(784,)),
 			tf.keras.layers.Dense(10, activation='relu'), # 10 digits, so one_hot output
 			tf.keras.layers.Softmax()	# Softmax the previous output scores for the loss function
 	])
