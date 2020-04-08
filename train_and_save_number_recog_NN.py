@@ -16,8 +16,20 @@ def get_images():
 	return training_images, testing_images, training_labels, testing_labels
 
 def create_model():
+	sizeDenseLayers = 1000
 	model = tf.keras.models.Sequential([ # Sequential model, easy mindmap
 			tf.keras.layers.Dense(784, activation='relu', input_shape=(784,)), # Rectified linear activator
+      tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
+      tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
+			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
+			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
+			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
+			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
+			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
+			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
+			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
+			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
+			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
 			tf.keras.layers.Dense(10, activation='relu'),
 			tf.keras.layers.Softmax()	# Softmax the previous output scores for the loss function
 	])
