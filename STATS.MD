@@ -12,7 +12,12 @@ CPU 500 images took 695 ms
 TPU 500 images took 198 ms
 
 ## Break even
-357,760 params 422.50KiB on chip
+318,010 params 370.00KiB on chip
+CPU 500 images took 154 ms
+TPU 500 images took 156 ms
+
+
+# With less parameters than ~318k the CPU performance keeps getting better, but the TPU is hitting a plateau of 155 ms / 500 images.
 
 # Method
 Tested using the following model, by varing the size of all the dense layers
@@ -49,7 +54,7 @@ For the break even I resorted to this model:
 ```
 def create_model():
 	model = tf.keras.models.Sequential([ # Sequential model, easy mindmap
-			tf.keras.layers.Dense(450, input_shape=(784,)), # Rectified linear activator
+			tf.keras.layers.Dense(400, input_shape=(784,)), # Rectified linear activator
 			tf.keras.layers.Dense(10, activation='relu'), # 10 digits, so one_hot output
 			tf.keras.layers.Softmax()	# Softmax the previous output scores for the loss function
 	])

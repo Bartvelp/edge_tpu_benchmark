@@ -17,7 +17,7 @@ def get_images():
 
 def create_model():
 	model = tf.keras.models.Sequential([ # Sequential model, easy mindmap
-			tf.keras.layers.Dense(450, input_shape=(784,)), # Rectified linear activator
+			tf.keras.layers.Dense(200, input_shape=(784,)), # Rectified linear activator
 			tf.keras.layers.Dense(10, activation='relu'), # 10 digits, so one_hot output
 			tf.keras.layers.Softmax()	# Softmax the previous output scores for the loss function
 	])
