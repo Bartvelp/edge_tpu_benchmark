@@ -13,28 +13,16 @@ def get_images():
 	# Flatten images here
 	training_images = training_images.reshape(training_images.shape[0], 28 * 28)
 	testing_images = testing_images.reshape(testing_images.shape[0], 28 * 28)
-	return training_images, testing_images, training_labels, testing_labels
+	return training_images[:10000], testing_images[:1000], training_labels[:10000], testing_labels[:1000]
 
 def create_model():
-	sizeDenseLayers = 1000
 	model = tf.keras.models.Sequential([ # Sequential model, easy mindmap
 			tf.keras.layers.Dense(784, activation='relu', input_shape=(784,)), # Rectified linear activator
-      tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
-      tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
-			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
-			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
-			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
-			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
-			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
-			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
-			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
-			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
-			tf.keras.layers.Dense(sizeDenseLayers, activation='relu'),
 			tf.keras.layers.Dense(10, activation='relu'),
 			tf.keras.layers.Softmax()	# Softmax the previous output scores for the loss function
 	])
 	model.compile(
-		optimizer='sgd', # stochastic gradient descent method that just works well
+		optimizer='adam', # stochastic gradient descent method that just works well
 		# easiest to use loss function sparse_categorical_crossentropy, easiest to understand mean_squared_error
 		loss='mean_squared_error',
 		metrics=['accuracy'] # Log accuracy
