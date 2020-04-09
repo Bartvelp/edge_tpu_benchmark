@@ -1,4 +1,7 @@
 #!/bin/bash
+set -e
+# Any subsequent(*) commands which fail will cause the shell script to exit immediately
+export TF_CPP_MIN_LOG_LEVEL=2
 python train_and_save_number_recog_NN.py $1
 python perform_post_training_quant.py 
 edgetpu_compiler converted_model_from_keras_8bit_all.tflite

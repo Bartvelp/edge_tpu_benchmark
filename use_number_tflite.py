@@ -9,7 +9,7 @@ def prepare_images():
     training_images = training_images.reshape(training_images.shape[0], 28, 28, 1)
     testing_images = testing_images.reshape(testing_images.shape[0], 28, 28, 1)
     used_images = np.concatenate([training_images, testing_images])
-    return used_images[:500]
+    return used_images[:100]
 
 
 def run_inference_round(interpreter, images):
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     # Load TFLite model and allocate tensors.
     interpreter = tf.lite.Interpreter(model_path="converted_model_from_keras_8bit_all.tflite")
     interpreter.allocate_tensors()
-
+    print('Starting inference on desktop CPU')
     images = prepare_images()
     for i in range(5):
         time_needed = run_inference_round(interpreter, images)

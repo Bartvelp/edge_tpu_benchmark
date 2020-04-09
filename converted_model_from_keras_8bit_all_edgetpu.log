@@ -4,6 +4,8 @@ Output: converted_model_from_keras_8bit_all_edgetpu.tflite
 
 Operator                       Count      Status
 
+CONV_2D                        100        Mapped to Edge TPU
+DEPTHWISE_CONV_2D              1          Mapped to Edge TPU
 SOFTMAX                        1          Mapped to Edge TPU
-FULLY_CONNECTED                2          Mapped to Edge TPU
+FULLY_CONNECTED                1          Mapped to Edge TPU
 QUANTIZE                       2          Mapped to Edge TPU

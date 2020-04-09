@@ -20,11 +20,12 @@ def get_images():
 images = get_images()
 
 def representative_dataset_gen():
-    for i in range(1, 10000):
+    for i in range(1, 20):
         # Get sample input data as a numpy array in a method of your choosing.
         yield [images[i:i+1]]
 
 if __name__ == '__main__':
+    print('Performing 8-bit quantization')
     # load model, compat mode because https://github.com/google-coral/edgetpu/issues/13
     converter = tf.compat.v1.lite.TFLiteConverter.from_keras_model_file('model.h5')
     converter.optimizations = [tf.lite.Optimize.DEFAULT]

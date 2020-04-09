@@ -3,7 +3,6 @@ import numpy as np
 import pickle
 from sys import argv
 
-
 def get_images():
     mnist = tf.keras.datasets.mnist
     (training_images, training_labels), (testing_images, testing_labels) = mnist.load_data()
@@ -12,22 +11,22 @@ def get_images():
     training_images = training_images.reshape(training_images.shape[0], 28, 28, 1)
     testing_images = testing_images.reshape(testing_images.shape[0], 28, 28, 1)
 
-    return training_images, testing_images, training_labels, testing_labels
+    return training_images[:5000], testing_images[:20], training_labels[:5000], testing_labels[:20]
 
 
 def create_model(typeNN):
-    num_layers = 10
+    num_layers = 100
     model = tf.keras.models.Sequential() # Sequential model, easy mindmap
 
     if typeNN == 'dense':
-        size_layers = 100
+        size_layers = 50
         model.add(tf.keras.layers.Flatten(input_shape=(28, 28, 1))) # we need to flatten the matrix into a vector
         for i in range(num_layers):
             model.add(tf.keras.layers.Dense(size_layers))
         
     elif typeNN == 'conv':
-        num_filters = 8
-        kernel_size = 3
+        num_filters = 32
+        kernel_size = 8
         model.add(tf.keras.layers.Conv2D(num_filters, kernel_size, input_shape=(28, 28, 1), padding='same'))
         for i in range(num_layers):
             model.add(tf.keras.layers.Conv2D(num_filters, kernel_size, padding='same'))
@@ -53,7 +52,7 @@ if __name__ == '__main__':
     one_hot_training_labels = tf.keras.utils.to_categorical(training_labels)
     one_hot_testing_labels = tf.keras.utils.to_categorical(testing_labels)
     # Train for 5 runs trough the data, batch size is auto
-    model.fit(training_images, one_hot_training_labels, epochs=1)
+    # model.fit(training_images, one_hot_training_labels, epochs=1)
     # Now the model is 98% accurate to the training data
     model.summary()
     #tf.keras.utils.plot_model(model, to_file='model.png')

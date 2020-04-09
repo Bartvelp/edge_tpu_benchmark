@@ -10,7 +10,7 @@ def prepare_images():
     training_images = training_images.reshape(training_images.shape[0], 28, 28, 1)
     testing_images = testing_images.reshape(testing_images.shape[0], 28, 28, 1)
     used_images = np.concatenate([training_images, testing_images])
-    return used_images[:500]
+    return used_images[:100]
 
 
 def run_inference_round(interpreter, images):
