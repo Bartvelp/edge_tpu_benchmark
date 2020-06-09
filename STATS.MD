@@ -1,6 +1,6 @@
 # Speed stats compared to amount of parameters
 
-## Convultional
+## Convolutional layers
 | Parameters    | On-chip memory | off-chip memory | TPU (ms/100 img) | CPU (ms/100 img)|
 | :------------ | :------------- | :-------------- | :--------------- | :-------------- |
 | 2,586,490     | 6.78MiB        | 892.12KiB       | 770.81           | 60871.17        |
@@ -8,7 +8,7 @@
 | 290,490       | 664KiB         | 196.06KiB       | 162.82           | 4174.98         |
 | 208,490       | 340KiB         | 196.06KiB       | 133.46           | 2150.38         |
 
-## Dense
+## Dense layers
 | Parameters    | On-chip memory | off-chip memory | TPU (ms/100 img) | CPU (ms/100 img)|
 | :------------ | :------------- | :-------------- | :--------------- | :-------------- |
 | 10,168,810    | 7.94MiB        | 5.23MiB         | 1762.97          | 1184.59         |
