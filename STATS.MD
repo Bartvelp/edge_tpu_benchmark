@@ -17,9 +17,3 @@
 | 520,810       | 1.23MiB        | 0               | 52.48            | 51.45           |
 
 If the TPU needs to stream to much parameters from off-chip memory it becomes slower than the onboard CPU
-
-Then there is a sweet spot where the TPU can use only on-chip memory and hugely outperforms the CPU.
-
-But with less parameters than ~318k the CPU performance keeps getting better, but the TPU is hitting a plateau of 155 ms / 500 images.
-
-According to google the mobilenet v2 NN has 3.4 Million parameters, which puts it in the sweet spot of the TPU. The Mobilenet NN is the model used in the example by Coral of python classification [here](https://github.com/google-coral/tflite/blob/master/python/examples/classification/classify_image.py). 
