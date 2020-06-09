@@ -1,2 +1,4 @@
 .vscode
-thesis_venv
+venv
+edgetpu_models/*
+models/*
