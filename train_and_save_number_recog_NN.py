@@ -11,21 +11,20 @@ def get_images():
     training_images = training_images.reshape(training_images.shape[0], 28, 28, 1)
     testing_images = testing_images.reshape(testing_images.shape[0], 28, 28, 1)
 
-    return training_images[:5000], testing_images[:20], training_labels[:5000], testing_labels[:20]
+    return training_images[:10], testing_images[:10], training_labels[:10], testing_labels[:10]
 
 
-def create_model(typeNN):
-    num_layers = 100
+def create_model(typeNN, num_layers):
     model = tf.keras.models.Sequential() # Sequential model, easy mindmap
 
     if typeNN == 'dense':
-        size_layers = 50
+        size_layers = 200
         model.add(tf.keras.layers.Flatten(input_shape=(28, 28, 1))) # we need to flatten the matrix into a vector
         for i in range(num_layers):
             model.add(tf.keras.layers.Dense(size_layers))
         
     elif typeNN == 'conv':
-        num_filters = 32
+        num_filters = 16
         kernel_size = 8
         model.add(tf.keras.layers.Conv2D(num_filters, kernel_size, input_shape=(28, 28, 1), padding='same'))
         for i in range(num_layers):
@@ -45,23 +44,29 @@ def create_model(typeNN):
 
 
 if __name__ == '__main__':
-    typeNN = argv[1] # 'dense' or 'conv'
-    print('STARTING to learn NN of type: ' + typeNN)
+    NN_types = ['dense', 'conv']
+    NN_num_layers_dense = [10, 140, 160, 250]
+    NN_num_layers_conv = [5, 10, 50, 150] # has a lot more parameters per layer
     training_images, testing_images, training_labels, testing_labels = get_images()
-    model = create_model(typeNN)
     one_hot_training_labels = tf.keras.utils.to_categorical(training_labels)
     one_hot_testing_labels = tf.keras.utils.to_categorical(testing_labels)
-    # Train for 5 runs trough the data, batch size is auto
-    # model.fit(training_images, one_hot_training_labels, epochs=1)
-    # Now the model is 98% accurate to the training data
-    model.summary()
-    #tf.keras.utils.plot_model(model, to_file='model.png')
-    
-    # try it on the testing data
-    test_loss, test_acc = model.evaluate(testing_images, one_hot_testing_labels, verbose=2)
-    print('{} is the testing accuracy'.format(test_acc))
-    # Save model in h5 format to disk
-    model.save("model.h5")
     # also save the MNIST data to disk for inference testing
-    pickle.dump(tf.keras.datasets.mnist.load_data(), open('mnist_data.pickle', 'wb'))
-    print('Saved model and MNIST data')
+    pickle.dump(tf.keras.datasets.mnist.load_data(),
+                open('mnist_data.pickle', 'wb'))
+
+    for typeNN in NN_types:
+        if typeNN == 'dense':
+            num_layers_arr = NN_num_layers_dense
+        elif typeNN == 'conv':
+            num_layers_arr = NN_num_layers_conv
+        for num_layers in num_layers_arr:
+            print('STARTING to learn NN of type: {}, num layers: {}'.format(typeNN, num_layers))
+            model = create_model(typeNN, num_layers)
+            # Train for 1 runs trough the data (only 10 images), batch size is auto
+            if typeNN is 'dense':
+                model.fit(training_images, one_hot_training_labels, epochs=1)
+
+            model_fn = 'models/{}_{}params.h5'.format(typeNN, model.count_params())
+            # Save model in h5 format to disk
+            model.save(model_fn)
+            print('Saved model: ' + model_fn)

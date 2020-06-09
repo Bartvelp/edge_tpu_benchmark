@@ -1,5 +1,7 @@
 import tensorflow as tf
 import numpy as np
+from os import listdir
+
 # https://www.tensorflow.org/lite/performance/post_training_quantization
 # if you get a toco_from_protos: not found error
 # Add ~/.local/bin/ to your PATH. e.g: PATH=/home/bart/.local/bin/:$PATH
@@ -25,19 +27,20 @@ def representative_dataset_gen():
         yield [images[i:i+1]]
 
 if __name__ == '__main__':
-    print('Performing 8-bit quantization')
-    # load model, compat mode because https://github.com/google-coral/edgetpu/issues/13
-    converter = tf.compat.v1.lite.TFLiteConverter.from_keras_model_file('model.h5')
-    converter.optimizations = [tf.lite.Optimize.DEFAULT]
-    converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
-    converter.inference_input_type = tf.uint8
-    converter.inference_output_type = tf.uint8
+    model_fns = ['./models/' + fn for fn in listdir('./models') if fn.endswith('.h5')]
+    for model_fn in model_fns:
+        print('Performing 8-bit quantization for: ' + model_fn)
+        # load model, compat mode because https://github.com/google-coral/edgetpu/issues/13
+        converter = tf.compat.v1.lite.TFLiteConverter.from_keras_model_file(model_fn)
+        converter.optimizations = [tf.lite.Optimize.DEFAULT]
+        converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
+        converter.inference_input_type = tf.uint8
+        converter.inference_output_type = tf.uint8
 
-    converter.representative_dataset = representative_dataset_gen
-    tflite_quant_model = converter.convert()
+        converter.representative_dataset = representative_dataset_gen
+        tflite_quant_model = converter.convert()
 
-    filename = 'converted_model_from_keras_8bit_all.tflite'
-    open(filename, 'wb').write(tflite_quant_model)
-    print('Saved model with 8bit quanitization')
-    print('Run the following command to compile it for the edge tpu:')
-    print('edgetpu_compiler {}'.format(filename))
+        tflite_fn = model_fn[:-3] + '.tflite'
+        open(tflite_fn, 'wb').write(tflite_quant_model)
+
+    print('Done')
